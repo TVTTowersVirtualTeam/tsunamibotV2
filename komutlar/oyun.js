@@ -1,0 +1,36 @@
+module.exports = {
+  kod: "oyun",
+  async run (client, message) {
+    const önerimesajı = message.content.split(' ').slice(1)
+    const öneri = önerimesajı.join(" ")
+    const kanal = client.channels.cache.find(ch => ch.id === '785060282686373938')
+    kanal.send(öneri + ' **💾 Oyun Komutu kullanıldı.** ' + message.author.tag + ' - ' + message.channel.name)
+    const Discord = require('discord.js')
+    const embed = new Discord.MessageEmbed()
+    .setTitle('**🎮 Tsunami Bot Oyun Kategorisi**')
+    .setColor('#00ffff')
+    .setThumbnail('https://cdn.discordapp.com/attachments/788722559943966720/790860761575718952/Screenshot_99.png')
+    .addField(':small_blue_diamond: **t!oyuncu-ara |**', '`Bir oyunda size takım arkadaşı arar.`')
+    .addField(':small_blue_diamond: **t!fortnite |**', '`Fortnite oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!pubg |**', '`Pubg oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!apex-legends |**', '`Etiketlenen kullanıcının avatarını gösterir.`')
+    .addField(':small_blue_diamond: **t!valorant |**', '`Valorant oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!zula |**', '`Zula oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!csgo |**', '`Csgo oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!rsg |**', '`Rsg oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!cod |**', '`Cod oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!cod-mobile |**', '`Cod mobile oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!battlefield |**', '`Battlefield oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!lol |**', '`Lol oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!metin2 |**', '`Metin2 oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!fifa |**', '`Fifa oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!pes |**', '`Pes oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!gta |**', '`Gta oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!minecraft |**', '`Minecraft oyunu hakkında bilgi verir.`')
+    .addField(':small_blue_diamond: **t!roblox |**', '`Roblox oyunu hakkında bilgi verir.`')
+    .addField(`➽ **🔗 Linkler**`, `[💌 Botu Sunucuna Ekle](https://discord.com/oauth2/authorize?client_id=779230692960632832&scope=bot&permissions=8)
+    [🗳 Bota Oy Ver](https://top.gg/bot/779230692960632832)
+    [☎️ Botun Destek Sunucusu](https://discord.gg/S4YtFAjRk8)`)
+    message.channel.send(embed);
+  }
+}
