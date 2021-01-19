@@ -1,0 +1,1409 @@
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const { Client, MessageEmbed } = require('discord.js');
+const işaret = require('./işaret.json');
+const hedefimiz = require('./hedef.json');
+
+var prefix = işaret.prefix
+var hedef = hedefimiz.hedef
+
+const { join } = require('path'); // tanımlamalar
+
+client.commands= new Discord.Collection(); // komutları alıyoruz
+
+const prefix = "!"
+
+const commandFiles = readdirSync(join(__dirname, "komutlar")).filter(file => file.endsWith(".js")); // Belli bir klasörden belli .js uzantılı dosyaları buluyor.
+
+for (const file of commandFiles) {
+    const command = require(join(__dirname, "komutlar", `${file}`));
+    client.commands.set(command.kod, command); // Komutları Ayarlıyoruz.
+}
+
+client.on("error", console.error);
+
+client.on('ready', () => {
+    client.user.setActivity('Tsunami Bot')
+    console.log('Tsunami Sunucuya Giriş Yaptı.')
+});
+
+client.on("message", async message => {
+
+    if(message.author.bot) return;
+
+    if(message.content.startsWith(prefix)) {
+        const args = message.content.slice(prefix.length).trim().split(/ +/);
+
+        const command = args.shift().toLowerCase();
+
+
+        try {
+            client.commands.get(command).run(client, message, args);
+
+        } catch (error){
+            console.error(error);
+        }
+    }
+})
+
+let { MessageEmbed } = require('discord.js')
+
+module.exports = {
+
+    kod: "kullanıcı-bilgi",
+    aliaes: ['userinfo', 'kullanıcıbilgi'],
+
+    run: async (app, message, args) => {
+
+        let user = message.mentions.users.first()
+
+        if (!user) {
+            return message.channel.send(':no_entry: **Bu komutu kullanabilmek için lütfen bir kullanıcı belirtin!**') 
+        };
+
+        let userEmbed = new MessageEmbed()
+        .setAuthor(app.user.username, app.user.displayAvatarURL())
+        .addField(':label: Kullanıcı Adı:', user.username)
+        .addField(':calendar_spiral: Discorda Kaydolma Tarihi:', user.createdAt)
+        .addField(':id: ID Numarası:', user.id)
+        .addField(':safety_pin: Tag:', '#' + user.discriminator)
+        .setColor('BLUE')
+        .setFooter(message.author.username + ' Adlı kullanıcı tarafından istendi.', message.author.displayAvatarURL())
+        .setThumbnail(user.displayAvatarURL())
+
+        message.channel.send(userEmbed)
+    }
+
+}
+
+module.exports = {
+  kod: "ping",
+  async run (client, message, args) {
+    const Discord = require('discord.js')
+    const embed = new Discord.MessageEmbed()
+    .setDescription('**Pong!**  :robot:')
+    .setColor('BLUE')
+    message.channel.send(embed);
+  }
+}
+
+module.exports = {
+  kod: "at",
+  async run (client, message, args) {
+    const args1 = message.content.split(' ').slice(2)
+    const neden = args1.join(" ")
+    const { MessageEmbed } = require('discord.js')
+    const user = message.mentions.users.first();
+    // If we have a user mentioned
+    if (user) {
+      // Now we get the member from the user
+      const member = message.guild.member(user);
+      // If the member is in the guild
+      if (member) {
+        /**
+         * Kick the member
+         * Make sure you run this on a member, not a user!
+         * There are big differences between a user and a member
+         */
+        member
+          .kick('Optional reason that will display in the audit logs')
+          .then(() => {
+            // We let the message author know we were able to kick the person
+            const kanal = message.guild.channels.cache.find(ch => ch.name === 'log-kanalı')
+            const embed = new MessageEmbed()
+            .setTitle('**ATILMA OLAYI**')
+            .setDescription(':clapper: **Olay:** `**Sunucudan Atılma**`')
+            .addField(':bust_in_silhouette: **Atılan Kullanıcı**:', member)
+            .addField(':scroll: **Atılma Sebebi**:', neden)
+            kanal.send(embed)
+          })
+          .catch(err => {
+            // An error happened
+            // This is generally due to the bot not being able to kick the member,
+            // either due to missing permissions or role hierarchy
+            message.reply('I was unable to kick the member');
+            // Log the error
+            console.error(err);
+          });
+      } else {
+        // The mentioned user isn't in this guild
+        message.reply("That user isn't in this guild!");
+      }
+      // Otherwise, if no user was mentioned
+    } else {
+      message.reply("You didn't mention the user to kick!");
+    }
+  }
+}
+
+module.exports = {
+  kod: "bilgi-ver",
+  async run (client, message, args) {
+    const Discord = require('discord.js')
+    const embed = new Discord.MessageEmbed()
+    .setTitle('**Tsunami Bot Bilgi**')
+    .setDescription('Tsunami botu 140 kişilik TVT ekibi tarafından 1 yıl boyunca geliştirilen bir bottur. Kurucusu ise Marshall Max#61192 dir. Botun ana amacı sunucuda tek bot ile her işi halletmektir.')
+    .setAuthor('Tsunami Bot')
+    .setColor('BLUE')
+    .addField('Botumuzu oylayarak bizi destekleyebilirsiniz. :muscle:');
+    message.channel.send(embed);
+  }
+}
+
+module.exports = {
+  kod: "p",
+  async run (client, message, args) {
+    const Discord = require('discord.js')
+    const embed = new Discord.MessageEmbed()
+    .setDescription('**Pong!**  :robot:')
+    .setColor('BLUE')
+    message.channel.send(embed);
+  }
+}
+
+module.exports = {
+  kod: "at",
+  async run (client, message, args) {
+    const args1 = message.content.split(' ').slice(2)
+    const neden = args1.join(" ")
+    const { MessageEmbed } = require('discord.js')
+    const user = message.mentions.users.first();
+    // If we have a user mentioned
+    if (user) {
+      // Now we get the member from the user
+      const member = message.guild.member(user);
+      // If the member is in the guild
+      if (member) {
+        /**
+         * Kick the member
+         * Make sure you run this on a member, not a user!
+         * There are big differences between a user and a member
+         */
+        member
+          .ban('Optional reason that will display in the audit logs')
+          .then(() => {
+            // We let the message author know we were able to kick the person
+            const kanal = message.guild.channels.cache.find(ch => ch.name === 'log-kanalı')
+            const embed = new MessageEmbed()
+            .setTitle('**YASAKLAMA OLAYI**')
+            .setDescription(':clapper: **Olay:** `**Sunucudan Yasaklanma**`')
+            .addField(':bust_in_silhouette: **Yasaklanan Kullanıcı**:', member)
+            .addField(':scroll: **Yasaklanma Sebebi**:', neden)
+            kanal.send(embed)
+          })
+          .catch(err => {
+            // An error happened
+            // This is generally due to the bot not being able to kick the member,
+            // either due to missing permissions or role hierarchy
+            message.reply('I was unable to kick the member');
+            // Log the error
+            console.error(err);
+          });
+      } else {
+        // The mentioned user isn't in this guild
+        message.reply("That user isn't in this guild!");
+      }
+      // Otherwise, if no user was mentioned
+    } else {
+      message.reply("You didn't mention the user to kick!");
+    }
+  }
+}
+
+const { MessageEmbed } = require('discord.js')
+const moment = require('moment')
+require('moment-duration-format')
+const os = require('os')
+module.exports = {
+  kod: "istatistik",
+  async run (client, message) {
+    const uptime = moment.duration(client.uptime).format("D [gün], H [saat], m [dakika], s [saniye]")
+    const embed = new MessageEmbed()
+    .setTitle(':chart_with_downwards_trend: **İstatistik**')
+    .setColor('BLUE')
+    .addField(':busts_in_silhouette: Kullanıcı Sayısı', client.users.cache.size)
+    .addField(':ticket: Sunucu Sayısı', client.guilds.cache.size)
+    .addField(':clipboard: Kanal Sayısı', client.channels.cache.size)
+    .addField(':date: Çalışma Süresi', uptime)
+    .addField(':pen_ballpoint: Node.js Versiyon', process.version)
+    .addField(':card_index: CPU', os.cpus().map(i => i.model)[0])
+    .addField(':keyboard: Bit', os.arch())
+    .addField(':desktop: İşletim Sistemi', os.platform())
+    .addField(':floppy_disk: Ram Kullanımı', (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2))
+    message.channel.send(embed)
+  }
+}
+
+module.exports = {
+  kod: "zamanlayıcı",
+  async run (client, message, args){
+    if (isNaN(args[0])) return message.reply('**:no_entry:  Zamanlayıcı komutunu kullanabilmek için lütfen geçerli bir sayı giriniz!**');
+    let args1 = message.content.split(' ').slice(2)
+    let mesaj = args1.join(" ")
+    message.reply('**:white_check_mark:  Başarılya zamanlayıcı oluştu belirttiğiniz süre dolduğunda belirtilen mesajı botumuz atacaktır.**')
+    setInterval(function () {
+      message.channel.send(mesaj)
+    }, args[0] * 1000);
+  }
+}
+
+client.on('guildCreate', async guild => {
+  const embed1 = new Discord.MessageEmbed()
+  .setTitle(':ocean: **Bizi sunucunuza eklediğiniz için sizlere teşekkür ederiz eğer bir sorun yaşarsanız destek sunucumuz da yardım isteyebilirsiniz destek ekibimiz sizinle ilgilenecektir, sunucunuzu çok daha yükseklere taşayacağız buna söz veriyoruz Tsunami Sözü!**')
+  .setDescription(':pushpin: **Sunucu Adı:** `' + guild.name + '`')
+  const embed2 = new Discord.MessageEmbed()
+  .setTitle(':new: **Yeni Sunucu**')
+  .setDescription(':pushpin: **Sunucu Adı:** ' + guild.name)
+  .setColor('BLUE')
+  .addField(':family_mwbb: **Kişi Sayısı:**', guild.memberCount)
+  .addField(':briefcase: **Sunucu Sahibi:**', guild.owner)
+  .setThumbnail(guild.iconURL)
+  guild.owner.send(embed1)
+  const channel = client.channels.cache.find(ch => ch.id === '779654706527338496')
+  channel.send(embed2)
+})
+
+client.on('guildDelete', async guild => {
+  const embed1 = new Discord.MessageEmbed()
+  .setTitle(':smiling_face_with_tear: **Bizi sunucunuzdan çıkardığınız için Üzgünüz umarım tekrar bizi sunucunuza eklersiniz görüşmek dileğiyle.**')
+  .setDescription(':pushpin: **Sunucu Adı:** `' + guild.name + '`')
+  const embed2 = new Discord.MessageEmbed()
+  .setTitle(':new: **Bir Sunucudan Çıktım**')
+  .setDescription(':pushpin: **Sunucu Adı:** ' + guild.name)
+  .setColor('BLUE')
+  .addField(':family_mwbb: **Kişi Sayısı:**', guild.memberCount)
+  .addField(':briefcase: **Sunucu Sahibi:**', guild.owner)
+  .setThumbnail(guild.iconURL)
+  guild.owner.send(embed1)
+  const channel = client.channels.cache.find(ch => ch.id === '779654706527338496')
+  channel.send(embed2)
+})
+
+client.on('ready', () => {
+  console.log ('Tsunami Sunucuya Giriş Yaptı. ${client.user.tag}');
+  client.user.setActivity('Geliştirme Aşamasında!', { type: 'PLAYING' })
+    .then(presence => console.log(`Durum --> ${presence.activities[0].name} oldu.`))
+    .catch(console.error);
+});
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-ucl') {
+    var Maç1 = [
+      'Bayern Münich',
+      'Lyon',
+    ];
+    var Maç2 = [
+      'Paris Saint-Germain',
+      'RB Leipzing'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **UEFA Şampiyonlar Ligi**')
+    .setDescription('Evet sayın seyirciler **Şampiyonlar Ligi** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+module.exports = {
+  kod: "at",
+  async run (client, message, args) {
+    const args1 = message.content.split(' ').slice(2)
+    const neden = args1.join(" ")
+    const { MessageEmbed } = require('discord.js')
+    const user = message.mentions.users.first();
+    // If we have a user mentioned
+    if (user) {
+      // Now we get the member from the user
+      const member = message.guild.member(user);
+      // If the member is in the guild
+      if (member) {
+        /**
+         * Kick the member
+         * Make sure you run this on a member, not a user!
+         * There are big differences between a user and a member
+         */
+        member
+          .kick('Optional reason that will display in the audit logs')
+          .then(() => {
+            // We let the message author know we were able to kick the person
+            const kanal = message.guild.channels.cache.find(ch => ch.name === 'log-kanalı')
+            const embed = new MessageEmbed()
+            .setTitle('LOG OLAYI')
+            .setDescription('Olay: `Kick`')
+            .addField('Kişi:', member)
+            .addField('Neden:', neden)
+            kanal.send(embed)
+          })
+          .catch(err => {
+            // An error happened
+            // This is generally due to the bot not being able to kick the member,
+            // either due to missing permissions or role hierarchy
+            message.reply('I was unable to kick the member');
+            // Log the error
+            console.error(err);
+          });
+      } else {
+        // The mentioned user isn't in this guild
+        message.reply("That user isn't in this guild!");
+      }
+      // Otherwise, if no user was mentioned
+    } else {
+      message.reply("You didn't mention the user to kick!");
+    }
+  }
+}
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-tr') {
+    var Maç1 = [
+      'Fenerbahçe',
+      'Galatasaray',
+    ];
+    var Maç2 = [
+      'İstanbul Başakşehir FK',
+      'Beşiktaş'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Süper Lig**')
+    .setDescription('Evet sayın seyirciler **Süper Lig** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-gb') {
+    var Maç1 = [
+      'Manchester United FC',
+      'Liverpool FC',
+    ];
+    var Maç2 = [
+      'Manchester City FC',
+      'Chelsea FC'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Süper Lig**')
+    .setDescription('Evet sayın seyirciler **Premier Lig** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-es') {
+    var Maç1 = [
+      'Real Madrid CF',
+      'FC Barcelona',
+    ];
+    var Maç2 = [
+      'Atlético Madrid',
+      'Valencia CF'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **La Liga Santander**')
+    .setDescription('Evet sayın seyirciler **La Liga Santander** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-ıt') {
+    var Maç1 = [
+      'Juventus FC',
+      'AC Milan',
+    ];
+    var Maç2 = [
+      'SSC Napoli',
+      'AS Roma'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Serie A**')
+    .setDescription('Evet sayın seyirciler **Serie A** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-de') {
+    var Maç1 = [
+      'FC Bayern München',
+      'Borussia Dortmund',
+    ];
+    var Maç2 = [
+      'FC Schalke 04',
+      'SV Werder Bremen'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Bundesliga**')
+    .setDescription('Evet sayın seyirciler **Bundesliga** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-fr') {
+    var Maç1 = [
+      'Paris Saint-Germain FC',
+      'Olympique Lyonnais',
+    ];
+    var Maç2 = [
+      'AS Monaco FC',
+      'Olympique Marsilya'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Ligue 1**')
+    .setDescription('Evet sayın seyirciler **Ligue 1** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on("guildMemberAdd", member => {
+try {
+const Sayaç = member.guild;
+Sayaç.setName(`TEST (${member.guild.memberCount}/${hedef})`);
+}
+catch (e) {
+console.log(e);
+}
+});
+
+client.on("guildMemberRemove", member => {
+try {
+const Sayaç = member.guild;
+Sayaç.setName(`TEST (${member.guild.memberCount}/${hedef})`);
+}
+catch (e) {
+console.log(e);
+}
+});
+
+    client.on('message', message => {
+      if (message.content.startsWith('oylama')) {
+    const args = message.content.split(' ').slice(1)
+    const botmesajı = args.join(" ")
+    if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(':no_entry: Oylama komutunu kullanabilmek için **YÖNETİCİ** yetkisine sahip olmalısınız!');
+    if (!botmesajı) return message.reply(':pencil: Ne oylaması yapacağımı yazmalısınız!');
+    message.delete(message.author)
+    const embed = new MessageEmbed()
+    .setTitle(':bar_chart: **OYLAMA**')
+    .setDescription(botmesajı)
+    .setColor('BLUE');
+    message.channel.send({ embed: embed }).then( embedMessage => {
+      embedMessage.react("✔️")
+      embedMessage.react("❌");
+    })
+  }
+})
+
+client.on('message', message => {
+  if (message.content.startsWith('duyur')) {
+    const kanal = message.mentions.channels.first();
+    const args = message.content.split(' ').slice(2)
+    const botmesajı = args.join(" ")
+    if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(':no_entry: Duyuru komutunu kullanabilmek için **YÖNETİCİ** yetkisine sahip olmalısınız!');
+    if (!botmesajı) return message.reply(':pencil: Duyuru metnini yazmalısınız!');
+    if (!kanal) return message.reply(':no_entry: Hangi kanalda duyuru yapacağımı belirtmelisiniz!');
+    message.delete(message.author)
+    kanal.send(botmesajı);
+  }
+})
+
+client.on('guildMemberAdd', member => {
+const girişçıkış = member.guild.channels.cache.find(channel => channel.name === 'gelen-giden');
+girişçıkış.send(`Sunucumuza hoş geldiniz, Bura da iyi vakit geçirmeniz dileğiyle! :inbox_tray: ${member}`);
+  member.send(`${member} Aramıza hoş geldin. Burada eğlen! :grinning:`);
+});
+
+client.on('guildMemberRemove', member => {
+  const girişçıkış = member.guild.channels.cache.find(channel => channel.name === 'gelen-giden');
+  girişçıkış.send(`${member} Sunucumuzdan ayrıldı. :outbox_tray:`);
+});
+
+client.on('message', message => {
+  if (!message.guild) return;
+  if (message.content.startsWith('!at')) {
+    if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('Bunu yapamazsınız! :x:')
+    const user = message.mentions.users.first();
+    if (user) {
+      const member = message.guild.member(user);
+      if (member) {
+        member
+          .kick()
+          .then(() => {
+          const log = message.guild.channels.cache.find(channel => channel.name === 'log-kanalı')
+           log.send(`${user.tag} Adlı kullanıcı sunucudan başarı ile atılmıştır. :white_check_mark: :boxing_glove:`);
+          })
+          .catch(err => {
+            message.reply('Bu kullanıcıyı maalesef sunucudan atamam. :x:');
+            console.error(err);
+          });
+      } else {
+        message.reply("Bahsettiğiniz kullanıcı bizim sunucumuz da bulunmuyor! :eyes:");
+      }
+    } else {
+      message.reply("!at @atılacakkişi Bu şekilde komutu kullanmalısınız aksi takdirde isteğinizi yerine getiremem! :bangbang:");
+    }
+  }
+});
+
+client.on('message', message => {
+  if (!message.guild) return;
+if (message.content.startsWith('!yasakla')) {
+    if (!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('Bunu yapamazsınız! :x:')
+    const user = message.mentions.users.first();
+    if (user) {
+      const member = message.guild.member(user);
+      if (member) {
+        member
+          .ban()
+          .then(() => {
+          const log = message.guild.channels.cache.find(channel => channel.name === 'log-kanalı')
+           log.send(`${user.tag} Adlı kullanıcı sunucudan başarı ile yasaklanmıştır. :white_check_mark: :boxing_glove:`);
+          })
+          .catch(err => {
+            message.reply('Bu kullanıcıyı suncudan maalesef yasaklayamam. :x:');
+            console.error(err);
+          });
+      } else {
+        message.reply("Bahsettiğiniz kullanıcı bizim sunucumuz da bulunmuyor! :eyes:");
+      }
+    } else {
+      message.reply("!yasakla @yasaklanacakkişi Bu şekilde komutu kullanmalısınız aksi takdirde isteğinizi yerine getiremem! :bangbang:");
+    }
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'selam') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('Size de selam. :innocent:')
+    .setAuthor('Tsunami Bot')
+    .setColor('BLUE')
+    .addField('Botumuzu oylayarak bizi destekleyebilirsiniz. :muscle:');
+    message.channel.send(kanal);
+  }
+});
+
+module.exports = {
+    kod: "oyuncu-ara",
+    async run (client, message, args) {
+        const game = args[0]
+        if (!game) return message.reply(":no_entry: Bu komutu kullanabilmek için bir oyun adı belirtmelisiniz!");
+        const nott = message.content.split(' ').slice(2)
+        const not = nott.join(" ")
+        if (!not) return message.reply(":no_entry: Bu komutu kullanabilmek için bir not belirtmelisiniz!");
+        if (message.member.voice.channel) {
+            const Discord = require('discord.js')
+      const embed = new Discord.MessageEmbed()
+      .setTitle('**Oyuncu Arıyor**')
+      .setColor('BLUE')
+      .addField("Oyun:", `${not}`);
+      message.channel.send(embed)
+    } else {
+   message.reply(':no_entry: Bu Komutu kullanmadan önce her hangi bir ses kanalına katılmalısınız!')
+    }
+  }
+}
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'sağlık durumların nasıl?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Rakiplerimden çok daha iyiyim onların hepsi corona ben ise en sağlıklı botum pingim shardım hiç bir sorunum yok ağlasın rakiplerim!**  :medal:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'nasıl gidiyor hayat?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Bu aralar hayat bana güzel!**  :star_struck:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'hangi takımı tutuyorsun?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Ölümüne Fener Bahçe!!!**  :yellow_heart::blue_heart: ')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'hangi işte çalışıyorsun?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**TVT Şirketinin Avukatıyım.**  :judge:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'küçükken hangi mesleği olmak isterdin?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Küçükken ben pilot olmak isterdim bunun sebebi gözüm her zaman yukarılardaydı hala da öyle.**  :man_pilot:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'Bekar mısın evli misin?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**3 Ay sonra düğünüm var damat olacağım her kesi beklerim.**  :person_in_tuxedo:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin hobin hangisi?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Yemek yapmak en sevdiğim hobimdir.**  :man_cook:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin ders nedir?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Aslında iş arkadaşlarım sözelci ama ben sayısalcıyım ve matematik dersini çok seviyorum ve notumda çok yüksek.**  :man_teacher:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'hangi dine inanıyorsun?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Bütün dinlere ve düşüncelere saygım var ama ben müslümanım ve İslam dinine inanırım.**  :man_wearing_turban:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin süper kahraman hangisi?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Benim en sevdiğim kahraman Superman.**  :superhero:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin kötü kahraman hangisi?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Benim en sevdiğim kötü kahraman tabi ki de Joker.**  :clown:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'kamu spotu yap') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Tüm engelli kardeşlerimize yardım edelim onlar ile güzel vakit geçirelim ve toplumu da bilinçlendirelim.**  :person_in_manual_wheelchair: :person_with_probing_cane:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin hayvan?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Hiç bir hayvanı ayırt etmem ben hepsini çok severim onların doğa da kalması taraftarıyım.**  :feet:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin sözün nedir?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Karadeniz gibi boğar, Köpek balığı gibi ıstırırım benim adım TSUNAMİ!!!**  :ocean: :crown:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'corona hakkında düşüncelerin nedir?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Maske takın, sosyal mesafeye uyun, ellerinizi dezenfektanlayın lütfen tabi Trump taktiği ile dezenfektan da içebilirsiniz işe yarar.**  :mask:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'hoş geldin') {
+    msg.reply('Hoş Bulduk. :innocent:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'merhaba') {
+    msg.reply('Size de merhaba. :innocent:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'ping') {
+    msg.reply('Pong! :robot:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'gün aydın') {
+    msg.reply('Size de gün aydın! :sun_with_face:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'sa') {
+    msg.reply('Aleyküm Selam, Hoş Geldiniz! :v:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'by') {
+    msg.reply('Sana da bay bay yarın görüşmek üzere. :wave:')
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'nasılsınız') {
+    msg.reply('İyidir Siz Nasılsınız! :hearts:');
+  }
+});
+
+client.on('message', msg => {
+  if (msg.content.toLowerCase() === 'kolay gelsin') {
+    msg.reply('Sağ ol dostum! :heart_eyes:');
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'merhaba') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Size de merhaba.**  :innocent:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'sağ ol') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Rica ederim görevimiz.**  :heart_eyes_cat:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'tsunami') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Öncelikle merhaba efendim ben Tsunami Bot size nasıl yardımcı olabilirim?**  :helmet_with_cross:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en iyi bot hangisi?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Tabi ki de benim dostum!**  :sunglasses:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'ping') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Pong!**  :robot:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'gün aydın') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Size de gün aydın!**  :sun_with_face:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'bb') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Sana da bay bay yarın görüşmek üzere.**  :wave:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'nasılsın') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**İyidir Siz Nasılsınız!**  :hearts:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'kolay gelsin') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Sağ ol dostum!**  :heart_eyes:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'sa') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Aleyküm Selam, Hoş Geldiniz!**  :wave:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'hoş geldin') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Hoş Bulduk.**   :smiling_face_with_3_hearts:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'selam') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Size de selam.**  :smiley_cat:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'en sevdiğin yöneticin kim?') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Mr. Kayra tabi ki de bana en iyi o bakıyor en kötü de Mr. Mahmud Esat bakıyor.**  :disguised_face:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === 'iyi geceler') {
+    const kanal = new MessageEmbed()
+
+    .setDescription('**Size de iyi geceler.**  :zzz:')
+    .setColor('BLUE')
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message', message => {
+  if (message.content.toLowerCase() === prefix + 'bilgi') {
+    const kanal = new MessageEmbed()
+
+    .setTitle('**Tsunami Bot Bilgi**')
+    .setDescription('Tsunami botu 140 kişilik TVT ekibi tarafından 1 yıl boyunca geliştirilen bir bottur. Kurucusu ise Marshall Max#61192 dir. Botun ana amacı sunucuda tek bot ile her işi halletmektir.')
+    .setAuthor('Tsunami Bot')
+    .setColor('BLUE')
+    .addField('Botumuzu oylayarak bizi destekleyebilirsiniz. :muscle:');
+    message.channel.send(kanal);
+  }
+});
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-ucl') {
+    var Maç1 = [
+      'Bayern Münich',
+      'Lyon',
+    ];
+    var Maç2 = [
+      'Paris Saint-Germain',
+      'RB Leipzing'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **UEFA Şampiyonlar Ligi**')
+    .setDescription('Evet sayın seyirciler **Şampiyonlar Ligi** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-tr') {
+    var Maç1 = [
+      'Fenerbahçe',
+      'Galatasaray',
+    ];
+    var Maç2 = [
+      'İstanbul Başakşehir FK',
+      'Beşiktaş'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Süper Lig**')
+    .setDescription('Evet sayın seyirciler **Süper Lig** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-gb') {
+    var Maç1 = [
+      'Manchester United FC',
+      'Liverpool FC',
+    ];
+    var Maç2 = [
+      'Manchester City FC',
+      'Chelsea FC'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Süper Lig**')
+    .setDescription('Evet sayın seyirciler **Premier Lig** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-es') {
+    var Maç1 = [
+      'Real Madrid CF',
+      'FC Barcelona',
+    ];
+    var Maç2 = [
+      'Atlético Madrid',
+      'Valencia CF'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **La Liga Santander**')
+    .setDescription('Evet sayın seyirciler **La Liga Santander** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-ıt') {
+    var Maç1 = [
+      'Juventus FC',
+      'AC Milan',
+    ];
+    var Maç2 = [
+      'SSC Napoli',
+      'AS Roma'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Serie A**')
+    .setDescription('Evet sayın seyirciler **Serie A** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-de') {
+    var Maç1 = [
+      'FC Bayern München',
+      'Borussia Dortmund',
+    ];
+    var Maç2 = [
+      'FC Schalke 04',
+      'SV Werder Bremen'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Bundesliga**')
+    .setDescription('Evet sayın seyirciler **Bundesliga** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message',message => {
+  if (message.content.toLowerCase() === prefix + 'futbol-fr') {
+    var Maç1 = [
+      'Paris Saint-Germain FC',
+      'Olympique Lyonnais',
+    ];
+    var Maç2 = [
+      'AS Monaco FC',
+      'Olympique Marsilya'
+    ];
+    var maç1galip = Math.floor(Math.random()*Maç1.length);
+    var maç2galip = Math.floor(Math.random()*Maç2.length);
+
+
+    var Şampiyon = [
+      `${Maç1[maç1galip]}`,
+      `${Maç2[maç2galip]}`
+    ];
+
+    var şampiyon = Math.floor(Math.random()*Şampiyon.length);
+
+    const embed = new MessageEmbed()
+    .setTitle(':trophy: **Ligue 1**')
+    .setDescription('Evet sayın seyirciler **Ligue 1** maç sonucu tablosunu görüyoruz! :trophy:')
+    .setColor('BLUE')
+    .addField('1. Maç Sonucu ', `${Maç1[maç1galip]}`)
+    .addField('2. Maç Sonucu ', `${Maç2[maç2galip]}`);
+    message.channel.send(embed);
+  }
+})
+
+client.on('message', message => {
+  if (message.content.startsWith('oylama')) {
+const args = message.content.split(' ').slice(1)
+const botmesajı = args.join(" ")
+if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(':no_entry: Oylama komutunu kullanabilmek için **YÖNETİCİ** yetkisine sahip olmalısınız!');
+if (!botmesajı) return message.reply(':pencil: Ne oylaması yapacağımı yazmalısınız!');
+message.delete(message.author)
+const embed = new MessageEmbed()
+.setTitle(':bar_chart: **OYLAMA**')
+.setDescription(botmesajı)
+.setColor('BLUE');
+message.channel.send({ embed: embed }).then( embedMessage => {
+  embedMessage.react("✔️")
+  embedMessage.react("❌");
+})
+}
+})
+
+client.on('message', message => {
+if (message.content.startsWith('duyur')) {
+const kanal = message.mentions.channels.first();
+const args = message.content.split(' ').slice(2)
+const botmesajı = args.join(" ")
+if (!message.member.hasPermission('ADMINISTRATOR')) return message.reply(':no_entry: Duyuru komutunu kullanabilmek için **YÖNETİCİ** yetkisine sahip olmalısınız!');
+if (!botmesajı) return message.reply(':pencil: Duyuru metnini yazmalısınız!');
+if (!kanal) return message.reply(':no_entry: Hangi kanalda duyuru yapacağımı belirtmelisiniz!');
+message.delete(message.author)
+kanal.send(botmesajı);
+}
+})
+
+module.exports = {
+    kod: "avatar",
+    async run (client, message, args) {
+        const { MessageEmbed } = require('discord.js')
+        const user = message.mentions.users.first()
+        if (user) {
+            const embed = new MessageEmbed()
+            .setTitle(':military_medal: **Bu zamana kadar gördüğüm en iyi avatar!**')
+            .setColor('BLUE')
+            .setImage(user.displayAvatarURL({ dynamic: true, size: 4096 }))
+            message.channel.send(embed)
+        } else {
+            const embed = new MessageEmbed()
+            .setTitle(':military_medal: **Bu zamana kadar gördüğüm en iyi avatar!**')
+            .setColor('BLUE')
+            .setImage(message.author.displayAvatarURL({ dynamic: true, size: 4096 }))
+            message.channel.send(embed)
+        }
+    }
+}
+
+module.exports = {
+  kod: "çekiliş-yap",
+  async run (client, message, args){
+    const {MessageEmbed} = require('discord.js')
+    let time = args[0]
+    let ödülargs = message.content.split(' ').slice(2)
+    let ödül = ödülargs.join(" ")
+    if (isNaN(time)) return;
+    const embed1 = new MessageEmbed()
+    .setTitle('**:tada:  Çekiliş Başladı**')
+    .setDescription(ödül)
+    .setColor('BLUE')
+    .setFooter('Çekiliş sonucu ' + time + ' saniye sonra açıklanacaktır bir yere ayrılmayın!')
+    const embed2 = new MessageEmbed()
+    .setDescription(':triangular_flag_on_post:  **Çekiliş Bitti Ödülü Kazananan Kullanıcı** - <@' + message.guild.members.cache.random() + '>')
+    .setTitle(ödül)
+    .setColor('BLUE')
+    .setFooter('Şanslısınız çekilişi kazandınız sizi tebrik ederiz!')
+    message.channel.send(embed1).then(embed => {
+      setTimeout(function (){
+        embed.edit(embed2)
+      }, time * 1000);
+    })
+    }
+  }
+
+  module.exports = {
+    kod: "öner",
+    async run (client, message, args) {
+      const önerimesajı = message.content.split(' ').slice(1)
+      const öneri = önerimesajı.join(" ")
+      const kanal = client.channels.cache.find(ch => ch.id === '781597565862674452')
+      kanal.send(öneri + ' - ' + message.author.tag + ' - ' + message.channel.name)
+      message.channel.send(':white_check_mark:  **Değerli üyemiz öneriniz alınmıştır ekibimiz önerinizi değerlendirecektir.**')
+    }
+  }
+
+  module.exports = {
+    kod: "sil",
+    async run (client, message, args){
+      if (isNaN(args)) return message.reply('**:no_entry:  Sil komutunu kullanabilmek için lütfen geçerli bir sayı giriniz!**');
+      if (args < 2 || args > 100) return message.reply('**:no_entry:  Bu komutu kullanabilmek için lütfen 2 ve 100 arasında bir sayı giriniz!**');
+      message.channel.bulkDelete(Number(args))
+      const { MessageEmbed} = require('discord.js')
+      const embed = new MessageEmbed()
+      .setTitle('**:white_check_mark:  Başarıyla Mesajlar Silindi**')
+      .setDescription('**:small_orange_diamond:  Silinen Mesaj Sayısı:** ' + args)
+      .setColor('BLUE')
+      message.channel.send(embed).then(mesaj => {
+        setTimeout(function () {
+          mesaj.delete()
+        }, 10000);
+      })
+    }
+  }
+
+  module.exports = {
+    kod: "yasağını-kaldır",
+    async run (client, message, args){
+      let id = args[0]
+      if (!message.member.hasPermission('BAN_MEMBERS')) return;
+      if (!message.guild.me.hasPermission('BAN_MEMBERS')) return;
+      if (isNaN(id)) return message.reply(':no_entry:  **Bu komutu kullanabilmek için lütfen geçerli bir ID giriniz!**');
+      message.guild.fetchBans().then(ban => {
+        if (ban.size === 0) return message.reply(':no_entry:  **Bu sunucuda şu ana kadar hiç kimse yasaklanmamış!**');
+        const banlanan = ban.find(b => b.user.id === id)
+        if (!banlanan) return message.channel.send(':no_entry:  **Bu adlı kullanıcı sunucumuzda yasaklanmamış!**');
+        message.guild.members.unban(banlanan.user)
+        message.reply(':white_check_mark:  **Bu kullanıcının yasağı başarı ile kalkmıştır!**')
+      })
+    }
+  }
+
+client.on('guildMemberAdd', member => {
+const girişçıkış = member.guild.channels.cache.find(channel => channel.name === 'gelen-giden');
+girişçıkış.send(`Sunucumuza hoş geldiniz, Bura da iyi vakit geçirmeniz dileğiyle! :inbox_tray: ${member}`);
+  member.send(`${member} Aramıza hoş geldin. Burada eğlen! :grinning:`);
+});
+
+client.on('guildMemberRemove', member => {
+const girişçıkış = member.guild.channels.cache.find(channel => channel.name === 'gelen-giden');
+if (!girişçıkış) return;
+girişçıkış.send(`${member} Sunucumuzdan ayrıldı. :outbox_tray:`);
+});
+
+client.login('Nzc5MjMwNjkyOTYwNjMyODMy.X7dhIg.CAhP4uF54MyJDAh0Gxf4OWbFCjg');
